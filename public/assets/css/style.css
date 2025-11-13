@@ -1,0 +1,86 @@
+/* استخدام خط افتراضي أفضل للقراءة (اختياري لكن يُفضل) */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* هذا الكلاس يعطي خلفية متدرجة هادئة (أبيض إلى أزرق طبي فاتح جداً) */
+.medical-theme-login {
+    background: linear-gradient(to bottom, #ffffff 0%, #e8f0fe 100%);
+}
+
+/* لجعل الفورم يستخدم الاتجاه من اليمين لليسار بشكل صحيح داخل الـ card */
+.card-body {
+    text-align: right !important;
+}
+
+/* لجعل الـ labels في الفورم تطفو لليمين بدلاً من اليسار */
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    right: 0;
+    transform: scale(.85) translateY(-.5rem) translateX(0.15rem);
+}
+.form-floating > label {
+    right: 0;
+    left: unset;
+}
+
+/* --- أكواد الثيم (تُضاف إلى style.css) --- */
+
+/* لون الخلفية العام لصفحات الـ dashboard */
+body {
+    background-color: #f8f9fa; /* لون رمادي فاتح جداً */
+}
+
+/* --- تصميم القائمة الجانبية (Sidebar) --- */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    /* ثيم طبي غامق (أزرق داكن) */
+    background: linear-gradient(to bottom, #0d6efd, #0a58ca);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    
+    /* (مهم) لتثبيت القائمة الجانبية في مكانها عند التمرير */
+    position: sticky;
+    top: 0;
+}
+
+/* تنسيق الروابط داخل القائمة الجانبية */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7); /* لون الخط (أبيض باهت) */
+    padding: 12px 20px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+/* تنسيق الرابط عند الوقوف عليه بالماوس */
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+/* تنسيق الرابط "النشط" (الصفحة الحالية) */
+.sidebar .nav-link.active {
+    background-color: #ffffff;
+    color: #0d6efd; /* لون الخط (أزرق) */
+    font-weight: bold;
+}
+
+/* --- تصميم المحتوى الرئيسي --- */
+.main-content {
+    /* (مهم) لجعل المحتوى يأخذ باقي عرض الشاشة */
+    width: calc(100% - 280px);
+    background-color: #f8f9fa;
+}
+
+/* --- (للهواتف) إخفاء القائمة الجانبية في الشاشات الصغيرة --- */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none !important; /* إخفاء كامل */
+    }
+    .main-content {
+        width: 100%; /* المحتوى يأخذ 100% من العرض */
+    }
+    /* (سنحتاج لاحقاً إضافة زر لإظهار القائمة في الهواتف، لكن هذا يكفي الآن) */
+}

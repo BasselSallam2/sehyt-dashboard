@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - صحتي</title>
+
+    <script src="/assets/js/main.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+    <div class="d-flex">
+
+        <div class="sidebar d-flex flex-column p-3">
+            <h4 class="text-center text-white mb-4">🩺 صحتي</h4>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/dashboard" class="nav-link active">
+                        <i class="bi bi-grid-fill me-2"></i>
+                        الصفحة الرئيسية
+                    </a>
+                </li>
+                <li>
+                    <a href="/profile" class="nav-link">
+                        <i class="bi bi-person-circle me-2"></i>
+                        الملف الشخصي
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/employees" class="nav-link">
+                        <i class="bi bi-people-fill me-2"></i>
+                        إدارة الموظفين
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/patients" class="nav-link">
+                        <i class="bi bi-person-hearts me-2"></i>
+                        إدارة المرضى
+                    </a>
+                </li>
+                <li>
+                    <a href="/banner" class="nav-link">
+                        <i class="bi bi-images me-2"></i>
+                        البنرات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/specializations" class="nav-link">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>
+                        التخصصات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/countries" class="nav-link">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        الدول والمدن
+                    </a>
+                </li>
+                <li data-role="doctor">
+                    <a href="/schedules" class="nav-link">
+                        <i class="bi bi-calendar3-week me-2"></i>
+                        إدارة المواعيد
+                    </a>
+                </li>
+                <li data-role="doctor">
+                    <a href="/reservations" class="nav-link">
+                        <i class="bi bi-calendar-check-fill me-2"></i>
+                        الحجوزات
+                    </a>
+                </li>
+            </ul>
+            <hr class="text-white">
+            <div class="text-center">
+                <a href="#" id="logout-button" class="btn btn-outline-light w-100">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    تسجيل الخروج
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content flex-grow-1 p-4">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">لوحة التحكم الرئيسية</span>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div id="alert-placeholder"></div>
+
+                <div class="row" id="stats-container">
+                    
+                    <div class="col-md-3" data-role="admin" style="display: none;">
+                        <div class="card text-white bg-primary mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">إجمالي الاطباء</h5>
+                                <p class="card-text fs-3" id="stats-doctors">...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" data-role="admin" style="display: none;">
+                        <div class="card text-white bg-info mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">إجمالي المرضي</h5>
+                                <p class="card-text fs-3" id="stats-patients">...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" data-role="admin" style="display: none;">
+                        <div class="card text-white bg-success mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">إجمالي الحجوزات</h5>
+                                <p class="card-text fs-3" id="stats-total-reservations">...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" data-role="admin" style="display: none;">
+                        <div class="card text-white bg-warning mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">إجمالي التخصصات</h5>
+                                <p class="card-text fs-3" id="stats-specializations">...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" data-role="doctor" style="display: none;">
+                        <div class="card text-white bg-success mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">إجمالي حجوزاتي</h5>
+                                <p class="card-text fs-3" id="stats-my-reservations">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> <div class="row" data-role="doctor" style="display: none;">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">حجوزات اليوم</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>المريض</th>
+                                                <th>الهاتف</th>
+                                                <th>الوقت</th>
+                                                <th>عن طريق بانر؟</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="today-reservations-body">
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewBannerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل البانر المستخدم</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <img id="banner-modal-image" src="" class="img-fluid" alt="صورة البانر">
+                    <div class="p-3">
+                        <h5 id="banner-modal-title" class="mb-2"></h5>
+                        <p id="banner-modal-subtitle" class="text-muted"></p>
+                        <span id="banner-modal-percentage" class="badge bg-success fs-6"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المرضى - صحتي</title>
+    <script src="../assets/js/main.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+    <div class="d-flex">
+
+        <div class="sidebar d-flex flex-column p-3">
+            <h4 class="text-center text-white mb-4">🩺 صحتي</h4>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                   <a href="/dashboard" class="nav-link ">
+                        <i class="bi bi-grid-fill me-2"></i>
+                        الصفحة الرئيسية
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/profile" class="nav-link"> <i class="bi bi-person-circle me-2"></i>
+                        الملف الشخصي
+                    </a>
+                </li>
+
+                <li data-role="admin">
+                    <a href="/employees" class="nav-link">
+                        <i class="bi bi-people-fill me-2"></i>
+                        إدارة الموظفين
+                    </a>
+                </li>
+
+                <li data-role="admin">
+                    <a href="/patients" class="nav-link active"> <i class="bi bi-person-hearts me-2"></i>
+                        إدارة المرضى
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/banner" class="nav-link">
+                        <i class="bi bi-images me-2"></i>
+                        البنرات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/specializations" class="nav-link">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>
+                        التخصصات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/countries" class="nav-link">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        الدول والمدن
+                    </a>
+                </li>
+
+                <li data-role="doctor">
+                    <a href="/schedules" class="nav-link"> <i class="bi bi-calendar3-week me-2"></i>
+                        إدارة المواعيد
+                    </a>
+                </li>
+                <li data-role="doctor">
+                    <a href="/reservations" class="nav-link"> <i class="bi bi-calendar-check-fill me-2"></i>
+                        الحجوزات
+                    </a>
+                </li>
+            </ul>
+            
+            <hr class="text-white">
+            <div class="text-center">
+                <a href="#" id="logout-button" class="btn btn-outline-light w-100">
+                    <i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content flex-grow-1 p-4">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h1">إدارة المرضى</span>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+
+                <div id="alert-placeholder"></div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="bi bi-funnel-fill me-2"></i> فلاتر البحث</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="filter-form">
+                            <div class="row">
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="filter-phone" class="form-label">رقم الهاتف</label>
+                                    <input type="text" class="form-control" id="filter-phone"
+                                        placeholder="...ابحث برقم الهاتف">
+                                </div>
+
+                                <div class="col-md-3 mb-2">
+                                    <label for="filter-country" class="form-label">الدولة</label>
+                                    <select class="form-select" id="filter-country">
+                                        <option value="" selected>كل الدول</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 mb-2">
+                                    <label for="filter-city" class="form-label">المدينة</label>
+                                    <select class="form-select" id="filter-city" disabled>
+                                        <option value="" selected>كل المدن</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-end mb-2">
+                                    <button type="submit" class="btn btn-primary w-100 me-2"
+                                        id="filter-button">بحث</button>
+                                    <button type="reset" class="btn btn-outline-secondary w-100"
+                                        id="clear-filter-button">مسح</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">قائمة المرضى</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">الاسم</th>
+                                        <th scope="col">الهاتف</th>
+                                        <th scope="col">الدولة</th>
+                                        <th scope="col">المدينة</th>
+                                        <th scope="col">تاريخ التسجيل</th>
+                                        <th scope="col">إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patients-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <nav id="pagination-container" class="d-flex justify-content-center mt-3"></nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/patients.js"></script>
+</body>
+
+<div class="modal fade" id="editPatientModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="edit-patient-form">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل بيانات المريض</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-patient-id">
+                    <div class="mb-3">
+                        <label for="edit-name" class="form-label">الاسم</label>
+                        <input type="text" class="form-control" id="edit-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-phone" class="form-label">رقم الهاتف</label>
+                        <input type="text" class="form-control" id="edit-phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-country" class="form-label">الدولة</label>
+                        <input type="text" class="form-control" id="edit-country">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-city" class="form-label">المدينة</label>
+                        <input type="text" class="form-control" id="edit-city">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary save-button">
+                        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        حفظ التعديلات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewReservationsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">حجوزات المريض: <span id="reservations-patient-name" class="fw-bold"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="reservations-loading" class="text-center p-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+                <div id="reservations-list-container" class="table-responsive" style="display: none;">
+                    <table class="table table-sm table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>الطبيب</th>
+                                <th>التاريخ</th>
+                                <th>الوقت (من)</th>
+                                <th>الوقت (إلى)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservations-list-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">تأكيد الحذف</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد أنك تريد حذف هذا **المريض**؟
+                <br><strong>سيتم حذف كل الحجوزات المرتبطة به.</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-button">
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    نعم، قم بالحذف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

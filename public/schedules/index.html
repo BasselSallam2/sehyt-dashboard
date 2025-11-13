@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>إدارة المواعيد - صحتي</title>
+
+		<script src="../assets/js/main.js"></script>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="../assets/css/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+		/>
+	</head>
+
+	<body>
+		<div class="d-flex">
+			<div class="sidebar d-flex flex-column p-3">
+				<h4 class="text-center text-white mb-4">🩺 صحتي</h4>
+				<ul class="nav nav-pills flex-column mb-auto">
+					<li class="nav-item">
+						<a href="/dashboard" class="nav-link ">
+                        <i class="bi bi-grid-fill me-2"></i>
+                        الصفحة الرئيسية
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/profile" class="nav-link"> <i class="bi bi-person-circle me-2"></i>
+                        الملف الشخصي
+                    </a>
+                </li>
+
+                <li data-role="admin">
+                    <a href="/employees" class="nav-link">
+                        <i class="bi bi-people-fill me-2"></i>
+                        إدارة الموظفين
+                    </a>
+                </li>
+
+                <li data-role="admin">
+                    <a href="/patients" class="nav-link"> <i class="bi bi-person-hearts me-2"></i>
+                        إدارة المرضى
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/banner" class="nav-link">
+                        <i class="bi bi-images me-2"></i>
+                        البنرات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/specializations" class="nav-link">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>
+                        التخصصات
+                    </a>
+                </li>
+                <li data-role="admin">
+                    <a href="/countries" class="nav-link">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        الدول والمدن
+                    </a>
+                </li>
+
+                <li data-role="doctor">
+                    <a href="/schedules" class="nav-link active"> <i class="bi bi-calendar3-week me-2"></i>
+                        إدارة المواعيد
+                    </a>
+                </li>
+                <li data-role="doctor">
+                    <a href="/reservations" class="nav-link"> <i class="bi bi-calendar-check-fill me-2"></i>
+                        الحجوزات
+                    </a>
+                </li>
+            </ul>
+
+				<hr class="text-white" />
+				<div class="text-center">
+					<a href="#" id="logout-button" class="btn btn-outline-light w-100">
+						<i class="bi bi-box-arrow-right me-2"></i> تسجيل الخروج
+					</a>
+				</div>
+			</div>
+
+			<div class="main-content flex-grow-1 p-4">
+				<nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4">
+					<div class="container-fluid">
+						<span class="navbar-brand mb-0 h1">إدارة المواعيد</span>
+						<button
+							class="btn btn-primary"
+							data-bs-toggle="modal"
+							data-bs-target="#addScheduleModal"
+						>
+							<i class="bi bi-plus-circle me-2"></i>
+							إنشاء جدول مواعيد
+						</button>
+					</div>
+				</nav>
+
+				<div class="container-fluid">
+					<div class="card shadow-sm">
+						<div class="card-header bg-light">
+							<h5 class="mb-0">جداول المواعيد الخاصة بك</h5>
+						</div>
+						<div class="card-body">
+							<div id="alert-placeholder"></div>
+
+							<div class="table-responsive">
+								<table class="table table-striped table-hover align-middle">
+									<thead class="table-light">
+										<tr>
+											<th scope="col">من تاريخ</th>
+											<th scope="col">إلى تاريخ</th>
+											<th scope="col">الوقت</th>
+											<th scope="col">الفاصل (ساعة)</th>
+											<th scope="col">الأيام</th>
+											<th scope="col">إجراءات</th>
+										</tr>
+									</thead>
+									<tbody id="schedules-table-body">
+										<tr>
+											<td colspan="6" class="text-center">
+												<div class="spinner-border text-primary" role="status"></div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="addScheduleModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="add-schedule-form">
+						<div class="modal-header">
+							<h5 class="modal-title">إنشاء جدول مواعيد جديد</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<p class="text-muted">سيقوم هذا بإنشاء جميع المواعيد المتاحة في النطاق المحدد.</p>
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="sched-fromDate" class="form-label">من تاريخ</label>
+									<input type="date" class="form-control" id="sched-fromDate" required />
+								</div>
+								<div class="col-md-6 mb-3">
+									<label for="sched-toDate" class="form-label">إلى تاريخ</label>
+									<input type="date" class="form-control" id="sched-toDate" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="sched-fromTime" class="form-label">من وقت</label>
+									<input type="time" class="form-control" id="sched-fromTime" required />
+								</div>
+								<div class="col-md-6 mb-3">
+									<label for="sched-toTime" class="form-label">إلى وقت</label>
+									<input type="time" class="form-control" id="sched-toTime" required />
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="sched-interval" class="form-label">الفاصل الزمني (بالساعات)</label>
+								<input
+									type="number"
+									class="form-control"
+									id="sched-interval"
+									value="1"
+									min="1"
+									required
+								/>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">أيام العمل</label>
+								<div id="sched-days" class="d-flex justify-content-between flex-wrap">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="0" id="day-0" /><label
+											class="form-check-label"
+											for="day-0"
+											>الأحد</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="1" id="day-1" /><label
+											class="form-check-label"
+											for="day-1"
+											>الإثنين</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="2" id="day-2" /><label
+											class="form-check-label"
+											for="day-2"
+											>الثلاثاء</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="3" id="day-3" /><label
+											class="form-check-label"
+											for="day-3"
+											>الأربعاء</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="4" id="day-4" /><label
+											class="form-check-label"
+											for="day-4"
+											>الخميس</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="5" id="day-5" /><label
+											class="form-check-label"
+											for="day-5"
+											>الجمعة</label
+										>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="6" id="day-6" /><label
+											class="form-check-label"
+											for="day-6"
+											>السبت</label
+										>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+							<button type="submit" class="btn btn-primary save-button">
+								<span class="spinner-border spinner-border-sm d-none" role="status"></span>
+								إنشاء المواعيد
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="editScheduleModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="edit-schedule-form">
+						<div class="modal-header">
+							<h5 class="modal-title">تعديل جدول المواعيد</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="edit-schedule-id" />
+							<p class="text-muted">
+								ملاحظة: تعديل هذا الجدول سيؤثر فقط على المواعيد *المستقبلية* التي لم تُحجز بعد.
+							</p>
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="edit-fromDate" class="form-label">من تاريخ</label>
+									<input type="date" class="form-control" id="edit-fromDate" required />
+								</div>
+								<div class="col-md-6 mb-3">
+									<label for="edit-toDate" class="form-label">إلى تاريخ</label>
+									<input type="date" class="form-control" id="edit-toDate" required />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="edit-fromTime" class="form-label">من وقت</label>
+									<input type="time" class="form-control" id="edit-fromTime" required />
+								</div>
+								<div class="col-md-6 mb-3">
+									<label for="edit-toTime" class="form-label">إلى وقت</label>
+									<input type="time" class="form-control" id="edit-toTime" required />
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="edit-interval" class="form-label">الفاصل الزمني (بالساعات)</label>
+								<input
+									type="number"
+									class="form-control"
+									id="edit-interval"
+									value="1"
+									min="1"
+									required
+								/>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">أيام العمل</label>
+								<div id="edit-days" class="d-flex justify-content-between flex-wrap">
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="0"
+											id="edit-day-0"
+										/><label class="form-check-label" for="edit-day-0">الأحد</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="1"
+											id="edit-day-1"
+										/><label class="form-check-label" for="edit-day-1">الإثنين</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="2"
+											id="edit-day-2"
+										/><label class="form-check-label" for="edit-day-2">الثلاثاء</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="3"
+											id="edit-day-3"
+										/><label class="form-check-label" for="edit-day-3">الأربعاء</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="4"
+											id="edit-day-4"
+										/><label class="form-check-label" for="edit-day-4">الخميس</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="5"
+											id="edit-day-5"
+										/><label class="form-check-label" for="edit-day-5">الجمعة</label>
+									</div>
+									<div class="form-check">
+										<input
+											class="form-check-input"
+											type="checkbox"
+											value="6"
+											id="edit-day-6"
+										/><label class="form-check-label" for="edit-day-6">السبت</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+							<button type="submit" class="btn btn-primary save-button">
+								<span class="spinner-border spinner-border-sm d-none" role="status"></span>
+								حفظ التعديلات
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header bg-danger text-white">
+						<h5 class="modal-title">تأكيد الحذف</h5>
+						<button
+							type="button"
+							class="btn-close btn-close-white"
+							data-bs-dismiss="modal"
+						></button>
+					</div>
+					<div class="modal-body">
+						هل أنت متأكد أنك تريد حذف هذا الجدول؟
+						<br /><strong>(ملاحظة: هذا لن يحذف المواعيد الفردية التي تم إنشاؤها مسبقاً)</strong>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+						<button type="button" class="btn btn-danger" id="confirm-delete-button">
+							<span class="spinner-border spinner-border-sm d-none" role="status"></span>
+							نعم، قم بالحذف
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="../assets/js/api.js"></script>
+		<script src="../assets/js/main.js"></script>
+		<script src="../assets/js/schedules.js"></script>
+	</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "eslint.enable": true,
+
+  "eslint.validate": ["javascript", "typescript"],
+
+  "eslint.run": "onType",
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
+
+   "typescript.tsdk": "./node_modules/typescript/lib"
+}
