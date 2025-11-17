@@ -28,7 +28,7 @@ export const addPatientParamFilter = (req, res, next) => {
 }
 
 export const getDoctorReservations = (req, res, next) => {
-    req.user._id = req.query.doctor;
+    req.query.doctor = req.user.id;
     req.query.reserved = true;
     next();
 }
