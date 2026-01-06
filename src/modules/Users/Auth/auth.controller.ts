@@ -27,6 +27,11 @@ class AuthController {
 		const result = await this.authService.signupUsers(input);
 		SucessRes.success(res, "Signup successful", 201, result);
 	});
+
+	guestLogin = asyncHandler(async (req: Request, res: Response) => {
+		const result = await this.authService.guestLogin();
+		SucessRes.success(res, "Guest login successful", 200, result);
+	});
 }
 
 export const authController = new AuthController();

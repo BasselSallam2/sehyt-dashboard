@@ -11,9 +11,15 @@ class employeeController extends GenericController<IEMPLOYEE> {
 	}
 
 	autoComplete = asyncHandler(async (req: Request, res: Response) => {
-		const { search, specialize } = req.query;
-		const { country, city } = req.user as any;
-		const {populate} = req.query
+		const { search, specialize, populate } = req.query;
+
+		// Handle both authenticated users and guests
+		let country, city;
+		if (req.user) {
+			country = (req.user as any).country;
+			city = (req.user as any).city;
+		}
+
 		const result = await employeeService.autoComplete(
 			search as string,
 			country,

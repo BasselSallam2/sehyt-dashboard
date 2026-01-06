@@ -28,6 +28,7 @@ export const SigninDTOKeys = {
 
 export interface tokenDecode {
 	id: Types.ObjectId;
-	specialize: Types.ObjectId;
+	specialize?: Types.ObjectId;
 	type: string;
+	isGuest?: boolean;
 }

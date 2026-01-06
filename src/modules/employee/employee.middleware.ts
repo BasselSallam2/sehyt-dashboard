@@ -1,9 +1,15 @@
 export const getDoctorsOnly = (req: any, res: any, next: any) => {
-    const {type} = req.user;
     req.query.type = "doctor";
-    if(type === "admin") return next();
-    req.query.country = req.user.country
-    req.query.sort = "city"
+
+    // If user is authenticated, apply user-specific filtering
+    if (req.user && req.user.type) {
+        const {type} = req.user;
+        if(type === "admin") return next();
+        req.query.country = req.user.country;
+        req.query.sort = "city";
+    }
+    // For guests, just show all doctors without filtering
+
     next();
 }
 

@@ -8,7 +8,7 @@ const router = Router();
 
 
 router.route("/")
-.get(protect ,getDoctorsOnly, employeeController.getAll)
+.get(getDoctorsOnly, employeeController.getAll) // <-- Removed protect for public access
 .post(employeeController.createOne);
 
 router.route("/admin")
@@ -16,7 +16,7 @@ router.route("/admin")
 
 
 router.route('/autocomplete')
-.get(protect, employeeController.autoComplete)
+.get(employeeController.autoComplete) // <-- Removed protect for public access
 
 router.route("/:id")
 .put(protect, employeeController.updateOne)

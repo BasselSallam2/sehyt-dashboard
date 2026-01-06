@@ -7,7 +7,7 @@ const router = Router();
 
 
 router.route("/")
-.get(protect , bunnerSorter, getDoctorsOnly , bunnerController.getAll)
+.get(bunnerController.getAll) // <-- Public access without middleware
 .post(protect, addActorIdToBody ,bunnerController.createOne);
 
 router.route("/:id")

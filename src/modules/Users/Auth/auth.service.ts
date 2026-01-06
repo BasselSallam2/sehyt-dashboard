@@ -46,6 +46,18 @@ class AuthService {
 		return { token };
 	}
 
+	async guestLogin() {
+		// Create a guest session with a temporary ID
+		const guestId = crypto.randomUUID();
+		const payload = {
+			id: guestId as any,
+			type: 'guest',
+			isGuest: true
+		};
+		const token = jwt.sign(payload, getEnv("JWT_SECRET_KEY"));
+		return { token, isGuest: true };
+	}
+
 }
 
 export const authService = new AuthService();

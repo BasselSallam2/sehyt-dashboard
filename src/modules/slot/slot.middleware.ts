@@ -7,7 +7,11 @@ export const GetAllMiddleWare = (req, res, next) => {
 };
 
 export const addDoctorToBody = (req, res, next) => {
-    req.body.doctor = req.user.id;
+    // Only set doctor for doctor users, not admins
+    if (req.user.type === 'doctor') {
+        req.body.doctor = req.user.id;
+    }
+    // For admins, expect doctor to be provided in the request body
     next();
 }
 

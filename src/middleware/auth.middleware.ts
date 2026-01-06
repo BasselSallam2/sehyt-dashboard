@@ -32,6 +32,39 @@ const verifyToken = (token: string) => {
 export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const token = getToken(req);
 	const decoded = verifyToken(token) as tokenDecode;
+
+	if (decoded.isGuest && decoded.type === 'guest') {
+		// Guest user - allow access but with limited permissions
+		req.user = {
+			id: decoded.id as Types.ObjectId,
+			type: 'guest',
+			isGuest: true
+		};
+		return next();
+	}
+
+	let user = null ;
+	if(decoded.type === 'user') {
+		 user = (await usersModel.findById(decoded.id)) as IUSERS;
+	}else if (decoded.type === 'doctor' || decoded.type === 'admin') {
+		user = (await employeeModel.findById(decoded.id)) as IEMPLOYEE;
+	}
+	if (!user) next(ErrorRes.userNotFound());
+	if (user.deleted) next(ErrorRes.userDeleted());
+	req.user = { id: user._id as Types.ObjectId, type: decoded.type , country : user.country, city : user.city };
+	if(decoded.specialize) req.user.specialize = decoded.specialize;
+	next();
+});
+
+export const requireAuth = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const token = getToken(req);
+	const decoded = verifyToken(token) as tokenDecode;
+
+	// Guests are not allowed for authenticated-only operations
+	if (decoded.isGuest || decoded.type === 'guest') {
+		return next(ErrorRes.unauthorized('Authentication required. Please login to perform this action.'));
+	}
+
 	let user = null ;
 	if(decoded.type === 'user') {
 		 user = (await usersModel.findById(decoded.id)) as IUSERS;
